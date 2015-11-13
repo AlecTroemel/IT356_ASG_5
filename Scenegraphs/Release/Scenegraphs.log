@@ -1,0 +1,32 @@
+﻿Build started 11/12/2015 9:00:45 PM.
+     1>Project "C:\Users\alect\Copy\IT356\assignment 5\Scenegraphs\Scenegraphs.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I../../graphics/headers /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt View.cpp
+         View.cpp
+     1>c:\users\alect\copy\it356\graphics\headers\utils\TriangleMesh.h(164): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\alect\copy\it356\graphics\headers\utils\TriangleMesh.h(171): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\alect\copy\it356\graphics\headers\utils\TriangleMesh.h(207): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\alect\copy\it356\assignment 5\scenegraphs\LeafNode.h(71): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\alect\copy\it356\assignment 5\scenegraphs\LeafNode.h(110): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\alect\copy\it356\assignment 5\scenegraphs\TransformNode.h(113): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\alect\copy\it356\assignment 5\scenegraphs\GroupNode.h(31): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\alect\copy\it356\assignment 5\scenegraphs\GroupNode.h(38): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\alect\copy\it356\assignment 5\scenegraphs\GroupNode.h(56): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\alect\copy\it356\assignment 5\scenegraphs\GroupNode.h(67): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\alect\copy\it356\assignment 5\scenegraphs\GroupNode.h(75): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\alect\copy\it356\assignment 5\scenegraphs\GroupNode.h(96): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\alect\copy\it356\assignment 5\scenegraphs\GroupNode.h(117): warning C4018: '<' : signed/unsigned mismatch
+     1>C:\Users\alect\Copy\IT356\graphics\headers\utils/OBJImporter.h(251): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>View.cpp(141): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+     1>View.cpp(142): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\alect\Copy\IT356\assignment 5\Release\Scenegraphs.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:../../graphics/lib/GL /LIBPATH:../../graphics/lib/SFML "sfml-window.lib" "sfml-system.lib" "sfml-graphics.lib" glew32.lib opengl32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\alect\Copy\IT356\assignment 5\Release\Scenegraphs.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\alect\Copy\IT356\assignment 5\Release\Scenegraphs.lib" /MACHINE:X86 /SAFESEH Release\Scenegraph.obj
+         Release\ScenegraphViewer.obj
+         Release\View.obj
+     1>ScenegraphViewer.obj : error LNK2001: unresolved external symbol "public: int __thiscall View::getStepsTaken(void)" (?getStepsTaken@View@@QAEHXZ)
+     1>C:\Users\alect\Copy\IT356\assignment 5\Release\Scenegraphs.exe : fatal error LNK1120: 1 unresolved externals
+     1>Done Building Project "C:\Users\alect\Copy\IT356\assignment 5\Scenegraphs\Scenegraphs.vcxproj" (Build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:05.69
