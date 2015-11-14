@@ -1,7 +1,7 @@
 <scene>
 	<instance name="box" path="models/box" />
     <instance name="sphere" path="models/sphere" />
-   <!-- <image name="checkerboard" path="checkerboard.png" /> -->
+    <image name="checkerboard" path="textures/checkerboard.png" /> 
     <light>
         <ambient>0.3 0.7 0.5</ambient>
         <diffuse>0.3 0.7 0.5</diffuse>
@@ -9,7 +9,7 @@
         <position>2 2 2</position>
     </light>
 
-    <object instanceof="box">
+    <object instanceof="sphere" >
         <material>                       
             <ambient>.8 .8 .8</ambient>
             <diffuse>.8 .8 .8</diffuse>

@@ -174,10 +174,10 @@ vector<graphics::Light*> * Scenegraph::lightsToViewCoord(stack<glm::mat4>& model
 
 /***************************** Raytracing Stuff *****************************/
 
-float Scenegraph::Raytrace(const int width, const int height, stack<glm::mat4>& modelView)
+float* Scenegraph::Raytrace(const int width, const int height, stack<glm::mat4>& modelView)
 {
 
-	const int size = width * height * 3;
+	const int size = width * height * 4;
 	float *pixels = new float[size];
 
 	// load world to view in modelview
@@ -202,12 +202,13 @@ float Scenegraph::Raytrace(const int width, const int height, stack<glm::mat4>& 
 			counter++;
 			pixels[counter] = color.z;
 			counter++;
-
+			pixels[counter] = 1;
+			counter++;
 		}
 	}
 
 	// return  the image as a 1d array of vec3
-	return *pixels;
+	return pixels;
 }
 
 bool Scenegraph::Raycast(Ray R, stack<glm::mat4>& modelView, glm::vec4 &color)

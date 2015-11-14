@@ -62,10 +62,12 @@ public:
 		return root;
 	}
 
+	/***************************** Raytracing Stuff *****************************/
+	float* Raytrace(const int width, const int height, stack<glm::mat4>& modelView);
+
 private:
 
 	/***************************** Raytracing Stuff *****************************/
-	float Raytrace(const int width, const int height, stack<glm::mat4>& modelView);
 	bool Raycast(Ray R, stack<glm::mat4>& modelView, glm::vec4 &color);
 
 	/***************************** SceneGraph Stuff *****************************/

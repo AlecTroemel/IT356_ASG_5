@@ -163,13 +163,19 @@ public:
 	virtual bool intersect(Ray R, Hitrecord & hr, stack<glm::mat4>& modelView)
 	{
 		Intersection intersection;
-		string objectType = this->instanceOf->getName;
-
-		float newT;
-		bool hit;
+		string objectType = instanceOf->getName();
+		//cout << objectType << endl;
+		float newT = 0;
+		bool hit = false;
 		glm::vec3 normal;
-		if (objectType == "Box") hit = intersection.Box(newT, R);
-		else if (objectType == "Sphere") hit = intersection.Sphere(newT, R);
+
+		// convert Ray object coordinates 
+		Ray rayObjectView = R;
+		rayObjectView.start = rayObjectView.start * glm::inverse(modelView.top());
+		rayObjectView.dir = rayObjectView.dir * glm::inverse(modelView.top());
+
+		if (objectType == "box") hit = intersection.Box(newT, rayObjectView);
+		else if (objectType == "sphere") hit = intersection.Sphere(newT, rayObjectView);
 
 	
 		// if the new T is closer, update the hitrecord 
@@ -179,15 +185,15 @@ public:
 			hr.material = this->material;
 
 			// need to update normal
-			if (objectType == "Box")
+			if (objectType == "box")
 			{
 				// hr.normal = stuff
 			}
-			else if (objectType == "Sphere")
+			else if (objectType == "sphere")
 			{
-				float x, y, z;
+				glm::vec4 P0 = R.start + newT * R.dir;
 				// my stuff here
-				hr.normal = glm::vec3(x,y,z);
+				hr.normal = (glm::transpose(glm::inverse(modelView.top())) * P0).xyz();
 			}
 
 			// later update textures

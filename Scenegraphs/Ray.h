@@ -7,13 +7,15 @@ using namespace std;
 class Ray
 {
 private:
-	glm::vec3 start;
-	glm::vec3 dir;
+
 public:
+	glm::vec4 start;
+	glm::vec4 dir;
+
 	Ray(int x, int y, int z)
 	{
-		this->start = glm::vec3(0, 0, 0);
-		this->dir = glm::vec3(x, y, z);
+		this->start = glm::vec4(0, 0, -10, 0);
+		this->dir = glm::vec4(x, y, z, 1);
 	}
 
 	~Ray() {};

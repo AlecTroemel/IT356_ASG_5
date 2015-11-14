@@ -49,7 +49,7 @@ public:
 	//the delegation functions called from the glut functions in main.cpp
 	void resize(int w, int h);
 	void initialize();
-	void draw();
+	void draw(bool raytrace);
 	void openFile(string filename);
 
 	void mousepress(int x, int y);
@@ -88,8 +88,10 @@ private:
 
 	GLuint program;
 	float scale;
-
 	glm::vec2 prev_mouse;
+
+	// for only drawing 1 image with the raytracer
+	bool drawn;
 };
 
 #endif // VIEW_H
