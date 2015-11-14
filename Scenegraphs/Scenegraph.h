@@ -11,6 +11,9 @@ using namespace std;
 #include <utils/Object.h>
 #include <utils/Texture.h>
 #include "Node.h"
+#include "Ray.h"
+#include "Hitrecord.h"
+
 
 class Scenegraph
 {    
@@ -58,38 +61,15 @@ public:
 	{
 		return root;
 	}
-	void updateShader(GLuint program) {
-
-
-
-	}
-
-
-
-
-	// for player movement
-	void movePlayer(float playerX, float playerY);
-	void moveCheckpoint();
-	int checkPointCounter;
 
 private:
+
+	/***************************** Raytracing Stuff *****************************/
+	float Raytrace(const int width, const int height, stack<glm::mat4>& modelView);
+	bool Raycast(Ray R, stack<glm::mat4>& modelView, glm::vec4 &color);
+
+	/***************************** SceneGraph Stuff *****************************/
     Node *root;
-
-	// for animation 
-	Node *arm1;
-	Node *arm2;
-	Node *arm3;
-	Node *arm4;
-	Node *sphere;
-	Node *chasie;
-
-	// for player movement
-	Node *player;
-	Node *checkPoint1;
-	Node *checkPoint2;
-	Node *checkPoint3;
-	Node *checkPoint4;
-
 	void createNodes();
 	vector<graphics::Light*> * lightsToViewCoord(stack<glm::mat4>& modelView);
 

@@ -143,108 +143,17 @@ void Scenegraph::draw(stack<glm::mat4>& modelView)
     }
 }
 
-// for player movement
-void Scenegraph::movePlayer(float playerX, float playerY)
-{
-	dynamic_cast<TransformNode*> (player)->setAnimationTransform(
-		glm::translate(glm::mat4(1.0), glm::vec3((270 - playerY), (225.5 - playerX), 0)));
-}
-
-void Scenegraph::moveCheckpoint()
-{
-	if (checkPointCounter == 0)
-	{
-		dynamic_cast<TransformNode*> (checkPoint1)->setAnimationTransform(
-			glm::translate(glm::mat4(1.0), glm::vec3(0, 0, -3))
-			*glm::scale(glm::mat4(1.0), glm::vec3(1, 1, 0.01)));
-
-		dynamic_cast<TransformNode*> (checkPoint2)->setAnimationTransform(
-			glm::translate(glm::mat4(1.0), glm::vec3(0, 0, 990))
-			*glm::scale(glm::mat4(1.0), glm::vec3(1, 1, 200)));
-	}
-	if (checkPointCounter == 1)
-	{
-		dynamic_cast<TransformNode*> (checkPoint2)->setAnimationTransform(
-			glm::translate(glm::mat4(1.0), glm::vec3(0, 0, -3))
-			*glm::scale(glm::mat4(1.0), glm::vec3(1, 1, 0.01)));
-
-		dynamic_cast<TransformNode*> (checkPoint3)->setAnimationTransform(
-			glm::translate(glm::mat4(1.0), glm::vec3(0, 0, 990))
-			*glm::scale(glm::mat4(1.0), glm::vec3(1, 1, 200)));
-	}
-	if (checkPointCounter == 2)
-	{
-		dynamic_cast<TransformNode*> (checkPoint3)->setAnimationTransform(
-			glm::translate(glm::mat4(1.0), glm::vec3(0, 0, -3))
-			*glm::scale(glm::mat4(1.0), glm::vec3(1, 1, 0.01)));
-
-		dynamic_cast<TransformNode*> (checkPoint4)->setAnimationTransform(
-			glm::translate(glm::mat4(1.0), glm::vec3(0, 0, 990))
-			*glm::scale(glm::mat4(1.0), glm::vec3(1, 1, 200)));
-	}
-	if (checkPointCounter == 3)
-	{
-		dynamic_cast<TransformNode*> (checkPoint4)->setAnimationTransform(
-			glm::translate(glm::mat4(1.0), glm::vec3(0, 0, -4))
-			*glm::scale(glm::mat4(1.0), glm::vec3(1, 1, 0.01)));
-	}
-
-	checkPointCounter++;
-}
-
 
 
 
 void Scenegraph::animate(float time)
 {
 	
-	// Brad Animation 
-	dynamic_cast<TransformNode*> (arm1)->setAnimationTransform(
-		glm::translate(glm::mat4(1.0), glm::vec3(0, 10, 0))
-		*glm::rotate(glm::mat4(1.0), sin(time) / 2, glm::vec3(1.0f, 0.0f, 0.0f))
-		*glm::translate(glm::mat4(1.0), glm::vec3(0, -10, 0)));
-
-	dynamic_cast<TransformNode*> (arm2)->setAnimationTransform(
-		glm::translate(glm::mat4(1.0), glm::vec3(0, 10, 0))
-		*glm::rotate(glm::mat4(1.0), cos(time) / 2, glm::vec3(0.0f, 0.0f, 1.0f))
-		*glm::translate(glm::mat4(1.0), glm::vec3(0, -10, 0)));
-
-	dynamic_cast<TransformNode*> (arm3)->setAnimationTransform(
-		glm::translate(glm::mat4(1.0), glm::vec3(0, 10, 0))
-		*glm::rotate(glm::mat4(1.0), sin(time) / 2, glm::vec3(1.0f, 0.0f, 0.0f))
-		*glm::translate(glm::mat4(1.0), glm::vec3(0, -10, 0)));
-
-	dynamic_cast<TransformNode*> (arm4)->setAnimationTransform(
-		glm::translate(glm::mat4(1.0), glm::vec3(0, 10, 0))
-		*glm::rotate(glm::mat4(1.0), cos(time) / 2, glm::vec3(0.0f, 0.0f, 1.0f))
-		*glm::translate(glm::mat4(1.0), glm::vec3(0, -10, 0)));
-
-	dynamic_cast<TransformNode*> (sphere)->setAnimationTransform(glm::rotate(glm::mat4(1.0), time, glm::vec3(0.0f, 1.0f, 0.0f)));
-	
-	// Alec Animation 
-	dynamic_cast<TransformNode*> (chasie)->setAnimationTransform(
-		glm::translate(glm::mat4(1.0), glm::vec3(0, 200, 0))
-		* glm::rotate(glm::mat4(1.0), sin(time*2), glm::vec3(1, 0, 0))
-		* glm::translate(glm::mat4(1.0), glm::vec3(0, -200, 0))
-		* glm::rotate(glm::mat4(1.0), 2 * time, glm::vec3(0, 1, 0))
-		); 
 }
 
 void Scenegraph::createNodes()
 {
-	arm1 = root->getNode("arm1");
-	arm2 = root->getNode("arm2");
-	arm3 = root->getNode("arm3");
-	arm4 = root->getNode("arm4");
-	sphere = root->getNode("sphere-rotation");
-	chasie = root->getNode("chasie");
-
-	// for movement
-	player = root->getNode("Player"); // need to add this object to the maze!!!
-	checkPoint1 = root->getNode("CheckPoint1");
-	checkPoint2 = root->getNode("CheckPoint2");
-	checkPoint3 = root->getNode("CheckPoint3");
-	checkPoint4 = root->getNode("CheckPoint4");
+	
 }
 
 vector<graphics::Light*> * Scenegraph::lightsToViewCoord(stack<glm::mat4>& modelView)
@@ -261,3 +170,62 @@ vector<graphics::Light*> * Scenegraph::lightsToViewCoord(stack<glm::mat4>& model
 
 	return lightsHolder;
 }
+
+
+/***************************** Raytracing Stuff *****************************/
+
+float Scenegraph::Raytrace(const int width, const int height, stack<glm::mat4>& modelView)
+{
+
+	const int size = width * height * 3;
+	float *pixels = new float[size];
+
+	// load world to view in modelview
+
+	// do the casting stuuuufffffff
+	int counter = 0;
+	for (int y = 0; y < height; y++)
+	{
+		for (int x = 0; x < width; x++)
+		{
+			// create Ray from camera through point (x,y)
+			Ray R(x - (0.5 * width),
+				y - (0.5 * height),
+				-(0.5 * height) / tan(100.0f*3.14159f / 90));
+
+			glm::vec4 color;
+			Raycast(R, modelView, color);
+
+			pixels[counter] = color.x;
+			counter++;
+			pixels[counter] = color.y;	
+			counter++;
+			pixels[counter] = color.z;
+			counter++;
+
+		}
+	}
+
+	// return  the image as a 1d array of vec3
+	return *pixels;
+}
+
+bool Scenegraph::Raycast(Ray R, stack<glm::mat4>& modelView, glm::vec4 &color)
+{
+	Hitrecord hr;
+
+	bool hit = root->intersect(R, hr, modelView);
+
+	if (hit == true) 
+	{
+		color = glm::vec4(1, 1, 1, 1);
+	}
+	else // did not hit anything, so return background color
+	{
+		color = glm::vec4(.2, .2, .2, 1);
+	}
+
+	return hit;
+
+}
+

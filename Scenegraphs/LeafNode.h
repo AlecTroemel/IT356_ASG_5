@@ -5,7 +5,7 @@
 
 #include <utils/Object.h>
 #include <utils/Material.h>
-
+#include "Intersections.h"
 class LeafNode : public Node
 {
 public:
@@ -157,6 +157,43 @@ public:
 	{
 		textures.push_back(*tex);
 		cout << "Texture set to " << tex->getName() << endl;
+	}
+
+	//calculating intersection of the ray with the child of the node after transformation
+	virtual bool intersect(Ray R, Hitrecord & hr, stack<glm::mat4>& modelView)
+	{
+		Intersection intersection;
+		string objectType = this->instanceOf->getName;
+
+		float newT;
+		bool hit;
+		glm::vec3 normal;
+		if (objectType == "Box") hit = intersection.Box(newT, R);
+		else if (objectType == "Sphere") hit = intersection.Sphere(newT, R);
+
+	
+		// if the new T is closer, update the hitrecord 
+		if (newT < hr.t)
+		{
+			hr.t = newT;
+			hr.material = this->material;
+
+			// need to update normal
+			if (objectType == "Box")
+			{
+				// hr.normal = stuff
+			}
+			else if (objectType == "Sphere")
+			{
+				float x, y, z;
+				// my stuff here
+				hr.normal = glm::vec3(x,y,z);
+			}
+
+			// later update textures
+		}
+
+		return hit;
 	}
 
 protected:

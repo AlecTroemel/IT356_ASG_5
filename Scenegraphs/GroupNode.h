@@ -121,6 +121,19 @@ public:
 	}
 
 
+	//calculating intersection of the ray with the children of the node 
+	virtual bool intersect(Ray R, Hitrecord & hr, stack<glm::mat4>& modelView)
+	{
+		bool hits = false;
+		for (int i = 0; i<children.size(); i++)
+		{
+			bool hit = children[i]->intersect(R, hr, modelView);
+			if (hit) hits = true; // record if we've hit anything
+		}
+
+		return hits;
+
+	}
 };
 
 #endif // GROUP_H

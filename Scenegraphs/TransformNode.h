@@ -136,7 +136,19 @@ public:
 		modelView.pop();
 	}
 
+	//calculating intersection of the ray with the child of the node after transformation
+	virtual bool intersect(Ray R, Hitrecord & hr, stack<glm::mat4>& modelView)
+	{
+		bool hits = false;
 
+		modelView.push(modelView.top());
+		modelView.top() = modelView.top() * animation_transform * transform;
+		if (child != NULL)
+			hits = child->intersect(R, hr, modelView);
+		modelView.pop();
+
+		return hits;
+	}
 
 protected:
 	glm::mat4 transform,animation_transform;

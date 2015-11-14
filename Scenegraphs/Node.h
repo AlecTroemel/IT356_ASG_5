@@ -1,11 +1,14 @@
 #ifndef NODE_H
 #define NODE_H
+
 #define GLM_FORCE_RADIANS
 #include <string>
 #include <map>
 #include <stack>
 #include <utils/Light.h>
 #include <iostream>
+#include "Ray.h"
+#include "Hitrecord.h"
 using namespace std;
 #include <glm/glm.hpp>
 
@@ -40,6 +43,8 @@ public:
     virtual void draw(stack<glm::mat4>& modelView)=0;
 	virtual void getLights(stack<glm::mat4>& modelView, vector<graphics::Light *> *list) = 0;
 
+	// calculate the intersection of ray with scenegraph, implimentations in leaf, transform, and group nodes
+	virtual bool intersect(Ray R, Hitrecord & hr, stack<glm::mat4>& modelView) = 0; 
 
 	virtual Node *clone()=0;
 	void setParent(Node *parent)
