@@ -36,8 +36,6 @@ public:
 			if (t1 < t2) t = t1;
 			else t = t2;
 		}
-
-
 		return true;
 	}
 

@@ -39,9 +39,8 @@ double frame_rate;
 bool mousePressed;
 int mouseX,mouseY;
 
-// for player movement
-int camLoc = 1;
-int stepsTaken;
+
+bool raytrace;
 
 
 //string filename = "TheMaze.xml";
@@ -80,8 +79,7 @@ int main(int argc, char *argv[])
     //initialize stuff. This will likely change with every program.
     init(filename);
 
-	
-// Start game loop
+	// Start game loop
 	while (window.isOpen())
 	{
 		// Process events
@@ -98,7 +96,6 @@ int main(int argc, char *argv[])
 
 		}
 	}
-    
 
     return EXIT_SUCCESS;
 }
@@ -123,6 +120,9 @@ void processEvent(sf::Event event, sf::RenderWindow& window)
 			break;
 		case sf::Keyboard::R:
 			v.openFile(filename);
+			break;
+		case sf::Keyboard::Space:
+			raytrace = !raytrace;
 			break;
 		}
 		break;
@@ -195,7 +195,7 @@ void display(sf::RenderWindow *window)
 	glClearColor(0,0,0,0);
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT); //this command actually clears the window.
 	glEnable(GL_DEPTH_TEST);
-	v.draw(); //simply delegate to our view class that has all the data and does all the rendering
+	v.draw(raytrace); //simply delegate to our view class that has all the data and does all the rendering
 
 	if (frames>500)
 	{
@@ -233,6 +233,8 @@ void resize(int w,int h)
 
 void init(string& filename)
 {
+	raytrace = false;
+
     int major,minor;
     v.getOpenGLVersion(&major,&minor);
 

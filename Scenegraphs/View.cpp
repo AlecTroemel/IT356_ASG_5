@@ -102,7 +102,7 @@ void View::draw(bool raytrace)
 	modelview.push(glm::mat4(1.0));
 
 	modelview.top() = glm::mat4(1.0f)
-		* glm::lookAt(glm::vec3(0, 0, 2), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0))
+		* glm::lookAt(glm::vec3(0, 0, 10), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0))
 		* trackballTransform;
 
 	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, glm::value_ptr(proj.top()));

@@ -69,6 +69,7 @@ private:
 
 	/***************************** Raytracing Stuff *****************************/
 	bool Raycast(Ray R, stack<glm::mat4>& modelView, glm::vec4 &color);
+	glm::vec4 Shade(Hitrecord & hr, stack<glm::mat4>& modelView);
 
 	/***************************** SceneGraph Stuff *****************************/
     Node *root;

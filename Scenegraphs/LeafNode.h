@@ -136,8 +136,8 @@ public:
 	}
 
 	/*
-		*Set the material of each vertex in this object
-		*/
+	 * Set the material of each vertex in this object
+	 */
 	virtual void setMaterial(graphics::Material& mat)
 	{
 		//cout << "material of node " << this->name << " updated" << endl;
@@ -146,8 +146,8 @@ public:
 	}
 
 	/*
-		* gets the material
-		*/
+	 * gets the material
+	 */
 	graphics::Material getMaterial()
 	{
 		return material;
@@ -171,8 +171,8 @@ public:
 
 		// convert Ray object coordinates 
 		Ray rayObjectView = R;
-		rayObjectView.start = rayObjectView.start * glm::inverse(modelView.top());
-		rayObjectView.dir = rayObjectView.dir * glm::inverse(modelView.top());
+		rayObjectView.start = glm::inverse(modelView.top()) * R.start;
+		rayObjectView.dir = glm::inverse(modelView.top()) * R.dir;
 
 		if (objectType == "box") hit = intersection.Box(newT, rayObjectView);
 		else if (objectType == "sphere") hit = intersection.Sphere(newT, rayObjectView);
@@ -191,7 +191,7 @@ public:
 			}
 			else if (objectType == "sphere")
 			{
-				glm::vec4 P0 = R.start + newT * R.dir;
+				glm::vec4 P0 = rayObjectView.start + newT * rayObjectView.dir;
 				// my stuff here
 				hr.normal = (glm::transpose(glm::inverse(modelView.top())) * P0).xyz();
 			}

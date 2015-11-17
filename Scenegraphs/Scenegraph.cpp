@@ -173,10 +173,8 @@ vector<graphics::Light*> * Scenegraph::lightsToViewCoord(stack<glm::mat4>& model
 
 
 /***************************** Raytracing Stuff *****************************/
-
 float* Scenegraph::Raytrace(const int width, const int height, stack<glm::mat4>& modelView)
 {
-
 	const int size = width * height * 4;
 	float *pixels = new float[size];
 
@@ -189,9 +187,7 @@ float* Scenegraph::Raytrace(const int width, const int height, stack<glm::mat4>&
 		for (int x = 0; x < width; x++)
 		{
 			// create Ray from camera through point (x,y)
-			Ray R(x - (0.5 * width),
-				y - (0.5 * height),
-				-(0.5 * height) / tan(100.0f*3.14159f / 90));
+			Ray R(x - (0.5 * width), y - (0.5 * height), -(0.5 * height) / tan(100.0f*3.14159f / 90));
 
 			glm::vec4 color;
 			Raycast(R, modelView, color);
@@ -223,10 +219,140 @@ bool Scenegraph::Raycast(Ray R, stack<glm::mat4>& modelView, glm::vec4 &color)
 	}
 	else // did not hit anything, so return background color
 	{
-		color = glm::vec4(.2, .2, .2, 1);
+		color = glm::vec4(0, 0, 0, 1);
 	}
 
 	return hit;
+}
+/*
+glm::vec4 Scenegraph::Shade(Hitrecord & hr, stack<glm::mat4>& modelView)
+{
 
+
+	glm::vec4 vPosition;
+	glm::vec4 vNormal;
+	glm::mat4 projection;
+	glm::mat4 modelview;
+	glm::mat4 normalmatrix;
+	glm::vec4 fColor;
+
+
+	const int MAXLIGHTS = 10;
+
+
+	int numLights;
+
+	// actual lighting stuff
+	glm::vec3 lightVec, viewVec, reflectVec;
+	glm::vec3 normalView;
+	glm::vec3 ambient, diffuse, specular;
+	float nDotL, rDotV;
+	glm::vec3 fNormal;
+	glm::vec4 fPosition;
+	vector<graphics::Light*> * lights = lightsToViewCoord(modelView);
+
+
+	fPosition = modelview * vPosition;
+	//gl_Position = projection * fPosition;
+
+
+	glm::vec4 tNormal = normalmatrix * vNormal;
+	fNormal = glm::normalize(glm::vec3(tNormal));
+
+	fColor = glm::vec4(0, 0, 0, 1);
+	normalView = glm::normalize(glm::vec3(fNormal));
+	viewVec = -glm::vec3(fPosition);
+	viewVec = glm::normalize(viewVec);
+
+	for (int i = 0; i<numLights; i++)
+	{
+
+		if (light[i].position.w != 0)
+			lightVec = glm::normalize(light[i].position.xyz - glm::vec3(fPosition));
+		else
+			lightVec = glm::normalize(-light[i].position.xyz);
+
+
+		nDotL = glm::dot(normalView, lightVec);
+
+
+		reflectVec = glm::reflect(-lightVec, normalView);
+		reflectVec = glm::normalize(reflectVec);
+
+		rDotV = max(glm::dot(reflectVec, viewVec), 0.0f);
+
+		ambient = material.ambient * light[i].ambient;
+		diffuse = material.diffuse * light[i].diffuse * max(nDotL, 0.0f);
+		if (nDotL>0)
+			specular = material.specular * light[i].specular * pow(rDotV, material.shininess);
+		else
+			specular = glm::vec3(0, 0, 0);
+		fColor = fColor + glm::vec4(ambient + diffuse + specular, 1.0);
+	}
 }
 
+*/
+
+
+
+
+
+
+
+
+	/*
+	vector<graphics::Light*> * lights = lightsToViewCoord(modelView);
+
+
+	glm::vec3 lightVec, viewVec, reflectVec;
+	glm::vec3 normalView;
+	glm::vec3 ambient, diffuse, specular;
+	float nDotL, rDotV;
+
+	glm::vec3 fNormal;
+	glm::vec4 fPosition;
+	glm::vec4 fTexCoord;
+
+	glm::vec4 fColor = glm::vec4(0, 0, 0, 1);
+
+	glm::vec3 fPposition;
+	
+
+
+	for (int i = 0; i < lights->size(); i++)
+	{
+		glm::vec3 lightPosXYZ = glm::vec3(lights->at(i)->getPosition().x,
+			lights->at(i)->getPosition().y,
+			lights->at(i)->getPosition().z);
+
+		if (lights->at(i)->getPosition().w != 0)
+			lightVec = glm::normalize(lightPosXYZ - fPosition.xyz);
+		else
+			lightVec = glm::normalize(-lightPosXYZ);
+
+		glm::vec3 tNormal = fNormal;
+		normalView = glm::normalize(hr.normal);
+		nDotL = glm::dot(normalView, lightVec);
+
+		viewVec = -fPosition.xyz;
+		viewVec = glm::normalize(viewVec);
+
+		reflectVec = glm::reflect(-lightVec, normalView);
+		reflectVec = glm::normalize(reflectVec);
+
+		rDotV = max(glm::dot(reflectVec, viewVec), 0.0f);
+
+		glm::vec3 materialAmbience = glm::vec3(hr.material.getAmbient().x, hr.material.getAmbient().y, hr.material.getAmbient().z);
+		glm::vec3 materialDiffuse = glm::vec3(hr.material.getDiffuse().x, hr.material.getDiffuse().y, hr.material.getDiffuse().z);
+		glm::vec3 materialSpecular = glm::vec3(hr.material.getSpecular().x, hr.material.getSpecular().y, hr.material.getSpecular().z);
+
+
+		ambient = materialAmbience * lights->at(i)->getAmbient();
+		diffuse = materialDiffuse * lights->at(i)->getDiffuse() * max(nDotL, 0.0f);
+		if (nDotL>0)
+			specular = materialSpecular * lights->at(i)->getSpecular() * pow(rDotV, hr.material.getShininess());
+		else
+			specular = glm::vec3(0, 0, 0);
+		fColor = fColor + glm::vec4(ambient + diffuse + specular, 1.0);
+	}
+	return fColor; */
