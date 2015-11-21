@@ -67,6 +67,7 @@ void main()
 			specular = material.specular * light[i].specular * pow(rDotV,material.shininess);
 		else
 			specular = vec3(0,0,0);
+
 		fColor = fColor + vec4(ambient+diffuse+specular,1.0);
 	}
 	fColor = fColor * texture2D(image,fTexCoord.st);

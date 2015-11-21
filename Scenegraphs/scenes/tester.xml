@@ -3,18 +3,44 @@
     <instance name="sphere" path="models/sphere" />
     <image name="checkerboard" path="textures/checkerboard.png" /> 
     <light>
-        <ambient>0.3 0.7 0.5</ambient>
-        <diffuse>0.3 0.7 0.5</diffuse>
-        <specular>0.3 0.7 0.5</specular>
-        <position>2 2 2</position>
+        <ambient>0.7 0.7 0.7</ambient>
+        <diffuse>0.7 0.7 0.7</diffuse>
+        <specular>0.7 0.7 0.7</specular>
+        <position>0 2 2</position>
     </light>
+    <group>
+        <transform>
+            <set>
+                <translate> -2 0 0 </translate>
+                <scale> 1 1 1 </scale>
+            </set>
+                    
+            <object instanceof="sphere" >
+                <material>                       
+                    <ambient>.8 .2 .2</ambient>
+                    <diffuse>.8 .2 .2</diffuse>
+                    <specular>0.8 0.2 0.2</specular>
+                    <shininess>8</shininess>
+                </material>
+            </object>
+        </transform>
 
-    <object instanceof="sphere" >
-        <material>                       
-            <ambient>.8 .8 .8</ambient>
-            <diffuse>.8 .8 .8</diffuse>
-            <specular>.8 .8 .8</specular>
-            <shininess>8</shininess>
-        </material>
-    </object>
+        <transform>
+            <set>
+                <translate> 2 0 0 </translate>
+                <scale> 2 1 1 </scale>
+                <rotate>53 0 -1 1</rotate>
+            </set>
+                    
+            <object instanceof="sphere" >
+                <material>                       
+                    <ambient>.2 .2 .8</ambient>
+                    <diffuse>.2 .2 .8</diffuse>
+                    <specular>0.2 0.2 0.8</specular>
+                    <shininess>8</shininess>
+                </material>
+            </object>
+        </transform>wsz
+
+    </group>
 </scene>

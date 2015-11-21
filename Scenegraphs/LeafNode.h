@@ -170,20 +170,21 @@ public:
 		glm::vec3 normal;
 
 		// convert Ray object coordinates 
-		Ray rayObjectView = R;
-		rayObjectView.start = glm::inverse(modelView.top()) * R.start;
-		rayObjectView.dir = glm::inverse(modelView.top()) * R.dir;
+		Ray rayObjectView;
+		rayObjectView.setP(glm::inverse(modelView.top()) * R.getP());
+		rayObjectView.setV(glm::inverse(modelView.top()) * R.getV());
 
 		if (objectType == "box") hit = intersection.Box(newT, rayObjectView);
 		else if (objectType == "sphere") hit = intersection.Sphere(newT, rayObjectView);
 
 	
 		// if the new T is closer, update the hitrecord 
-		if (newT < hr.t)
+		if (newT < hr.getT() && hit == true)
 		{
-			hr.t = newT;
-			hr.material = this->material;
-
+			hr.setT(newT);
+			hr.setMaterial(this->material);
+			
+			//cout << hr.hitPoint.x << " " << hr.hitPoint.y << " " << hr.hitPoint.z << endl;
 			// need to update normal
 			if (objectType == "box")
 			{
@@ -191,9 +192,20 @@ public:
 			}
 			else if (objectType == "sphere")
 			{
-				glm::vec4 P0 = rayObjectView.start + newT * rayObjectView.dir;
-				// my stuff here
-				hr.normal = (glm::transpose(glm::inverse(modelView.top())) * P0).xyz();
+				// get the intersection 
+				glm::vec4 P0 = rayObjectView.getP() + newT * rayObjectView.getV();
+
+				// set point of intersection (in view coord)
+				hr.setHitPoint(modelView.top() * P0);
+
+			
+				// normal of sphere is simply the x,y,z values where the ray intersects 
+				glm::mat4 normalMatrix = glm::transpose(glm::inverse(modelView.top()));
+				glm::vec4 viewCoordNormal =  normalMatrix * P0;
+				viewCoordNormal.w = 0; // its now a vector 
+				viewCoordNormal = glm::normalize(viewCoordNormal);
+				hr.setNormal(viewCoordNormal);
+
 			}
 
 			// later update textures

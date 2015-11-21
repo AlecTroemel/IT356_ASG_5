@@ -17,9 +17,9 @@ public:
 
 	bool Sphere(float &t, Ray R)
 	{
-		float A = (R.dir.x * R.dir.x) + (R.dir.y * R.dir.y) + (R.dir.z * R.dir.z);
-		float B = (2 * R.start.x * R.dir.x) + (2 * R.start.y * R.dir.y) + (2 * R.start.z * R.dir.z);
-		float C = (R.start.x * R.start.x) + (R.start.y * R.start.y) + (R.start.z * R.start.z) - 1;
+		float A = (R.getV().x * R.getV().x) + (R.getV().y * R.getV().y) + (R.getV().z * R.getV().z);
+		float B = (2 * R.getP().x * R.getV().x) + (2 * R.getP().y * R.getV().y) + (2 * R.getP().z * R.getV().z);
+		float C = (R.getP().x * R.getP().x) + (R.getP().y * R.getP().y) + (R.getP().z * R.getP().z) - 1;
 		float determinate = (B * B) - (4 * A * C);
 
 		if (determinate < 0) return false;
@@ -38,11 +38,6 @@ public:
 		}
 		return true;
 	}
-
-
-
 };
-
-
 
 #endif

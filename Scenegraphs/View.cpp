@@ -122,11 +122,13 @@ void View::draw(bool raytrace)
 	{
 		if (drawn == false)
 		{
-			cout << "this" << endl;
-			int width = 100, height = 100;
+			cout << "Raytracing and printing to png" << endl;
+			int width = 400, height = 400;
+
+			// raytrace
+			float *temp = sgraph.Raytrace(width, height, modelview);
 
 			// write raytrace array to .png image
-			float *temp = sgraph.Raytrace(width, height, modelview);
 			sf::Image image;
 			uint8_t *imageArray = new uint8_t[width*height * 4];
 
