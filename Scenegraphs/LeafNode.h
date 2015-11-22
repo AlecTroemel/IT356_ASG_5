@@ -176,29 +176,43 @@ public:
 
 		if (objectType == "box") hit = intersection.Box(newT, rayObjectView);
 		else if (objectType == "sphere") hit = intersection.Sphere(newT, rayObjectView);
-
 	
 		// if the new T is closer, update the hitrecord 
 		if (newT < hr.getT() && hit == true)
 		{
 			hr.setT(newT);
 			hr.setMaterial(this->material);
+
+			// get the intersection 
+			glm::vec4 P0 = rayObjectView.getP() + newT * rayObjectView.getV();
 			
+			// set point of intersection (in view coord)
+			hr.setHitPoint(modelView.top() * P0);
+
 			//cout << hr.hitPoint.x << " " << hr.hitPoint.y << " " << hr.hitPoint.z << endl;
 			// need to update normal
 			if (objectType == "box")
 			{
-				// hr.normal = stuff
+				glm::mat4 normalMatrix = glm::transpose(glm::inverse(modelView.top()));
+				glm::vec4 objNormal;
+
+				if(P0.x == 0.5f)
+					objNormal = glm::vec4(1.0f,0,0,0);
+				else if(P0.x == -0.5f)
+					objNormal = glm::vec4(-1.0f,0,0,0);
+				else if(P0.y == 0.5f)
+					objNormal = glm::vec4(0,1.0f,0,0);
+				else if(P0.y == -0.5f)
+					objNormal = glm::vec4(0,-1.0f,0,0);
+				else if(P0.z == 0.5f)
+					objNormal = glm::vec4(0,0,1.0f,0);
+				else if(P0.z == -0.5f)
+					objNormal = glm::vec4(0,0,-1.0f,0);
+				glm::vec4 viewCoordNormal = normalMatrix * objNormal;
+				hr.setNormal(viewCoordNormal);
 			}
 			else if (objectType == "sphere")
-			{
-				// get the intersection 
-				glm::vec4 P0 = rayObjectView.getP() + newT * rayObjectView.getV();
-
-				// set point of intersection (in view coord)
-				hr.setHitPoint(modelView.top() * P0);
-
-			
+			{		
 				// normal of sphere is simply the x,y,z values where the ray intersects 
 				glm::mat4 normalMatrix = glm::transpose(glm::inverse(modelView.top()));
 				glm::vec4 viewCoordNormal =  normalMatrix * P0;

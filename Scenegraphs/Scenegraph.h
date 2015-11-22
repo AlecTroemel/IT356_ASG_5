@@ -94,7 +94,6 @@ private:
 	GLuint  textureID;
 
 	LightLocation lightLocation[10];
-	bool debug = true;
 };
 
 #endif // SCENEGRAPH_H

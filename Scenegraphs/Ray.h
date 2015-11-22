@@ -10,6 +10,7 @@ private:
 	glm::vec4 start;
 	glm::vec4 dir;
 public:
+
 	glm::vec4 getV()
 	{
 		return this->start;

@@ -123,18 +123,11 @@ void Scenegraph::draw(stack<glm::mat4>& modelView)
 	//light properties 
 	for (int i = 0; i < lightsHolder->size(); i++)
 	{
-		if (debug) {
-			cout << i
-				<< " " << lightsHolder->at(i)->getPosition().x
-				<< " " << lightsHolder->at(i)->getPosition().y
-				<< " " << lightsHolder->at(i)->getPosition().z << endl;
-		}
 		glUniform3fv(lightLocation[i].ambientLocation, 1, glm::value_ptr(lightsHolder->at(i)->getAmbient()));
 		glUniform3fv(lightLocation[i].diffuseLocation, 1, glm::value_ptr(lightsHolder->at(i)->getDiffuse()));
 		glUniform3fv(lightLocation[i].specularLocation, 1, glm::value_ptr(lightsHolder->at(i)->getSpecular()));
 		glUniform4fv(lightLocation[i].positionLocation, 1, glm::value_ptr(lightsHolder->at(i)->getPosition()));
 	}
-	debug = false;
 	delete lightsHolder; // clean up the lightsHolder 
 
     if (root!=NULL)
@@ -261,6 +254,8 @@ glm::vec4 Scenegraph::Shade(Hitrecord & hr, stack<glm::mat4>& modelview)
 		rDotV = max(glm::dot(reflectVec, viewVec), 0.0f);
 		
 		ambient = glm::vec3(hr.getMaterial().getAmbient()) * lights->at(i)->getAmbient();
+		//cout << ambient.x << " " << ambient.y << " " << ambient.z << endl;
+
 		diffuse = glm::vec3(hr.getMaterial().getDiffuse()) * lights->at(i)->getDiffuse() * max(nDotL, 0.0f);	
 		if (nDotL>0)
 			specular = glm::vec3(hr.getMaterial().getSpecular()) * lights->at(i)->getSpecular() * pow(rDotV*-1, hr.getMaterial().getShininess());
