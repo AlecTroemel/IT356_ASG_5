@@ -183,18 +183,60 @@ public:
 		{
 			hr.setT(newT);
 			hr.setMaterial(this->material);
-			
+
+
+			// get the intersection 
+			glm::vec4 P0 = rayObjectView.getP() + newT * rayObjectView.getV();
+
 			//cout << hr.hitPoint.x << " " << hr.hitPoint.y << " " << hr.hitPoint.z << endl;
 			// need to update normal
 			if (objectType == "box")
 			{
-				// hr.normal = stuff
+				glm::mat4 normalMatrix = glm::transpose(glm::inverse(modelView.top()));
+				glm::vec4 objNormal = glm::vec4(0,0,0,0);
+
+				// get x part of normal
+				if (P0.x == 0.5f) objNormal.x = 1.0f;
+				else objNormal.x = -1.0f;
+				
+				// get x part of normal
+				if (P0.y == 0.5f) objNormal.y = 1.0f;
+				else objNormal.y = -1.0f;
+
+				// get x part of normal
+				if (P0.z == 0.5f) objNormal.z = 1.0f;
+				else objNormal.z = -1.0f;
+
+				/*
+				if (P0.x == 0.5f)
+					objNormal = glm::vec4(1.0f, 0, 0, 0);
+				else if (P0.x == -0.5f)
+					objNormal = glm::vec4(-1.0f, 0, 0, 0);
+				else if (P0.y == 0.5f)
+					objNormal = glm::vec4(0, 1.0f, 0, 0);
+				else if (P0.y == -0.5f)
+					objNormal = glm::vec4(0, -1.0f, 0, 0);
+				else if (P0.z == 0.5f)
+					objNormal = glm::vec4(0, 0, 1.0f, 0);
+				else if (P0.z == -0.5f)
+					objNormal = glm::vec4(0, 0, -1.0f, 0);
+				else
+					cout << P0.x << " " << P0.y << " " << P0.z << endl;
+					*/
+
+				//cout << objNormal.x << " " << objNormal.y << " " << objNormal.z << endl;
+
+				glm::vec4 viewCoordNormal = normalMatrix * objNormal;
+				viewCoordNormal = glm::normalize(viewCoordNormal);
+				hr.setNormal(viewCoordNormal);
+
+				// set texture 
+				hr.setTexture(&(scenegraph->deafultTexture));
+				hr.setTextureCoords(glm::vec2(0, 0));
+
 			}
 			else if (objectType == "sphere")
 			{
-				// get the intersection 
-				glm::vec4 P0 = rayObjectView.getP() + newT * rayObjectView.getV();
-
 				// set point of intersection (in view coord)
 				hr.setHitPoint(modelView.top() * P0);
 

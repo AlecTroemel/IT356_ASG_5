@@ -7,11 +7,71 @@ public:
 	Intersection() {};
 	~Intersection() {};
 
-
-
-	bool Box(float t, Ray R)
+	bool Box(float &t, Ray R)
 	{
-		return true;
+		float tnear, tfar, txmin, txmax, tymin, tymax, tzmin, tzmax;
+		tnear = -1 * numeric_limits<float>::max();
+		tfar = numeric_limits<float>::max();
+		float bbmin = -0.5f;
+		float bbmax = 0.5f;
+		float x = R.getV().x;
+		float y = R.getV().y;
+		float z = R.getV().z;
+
+		// Check if any direction vector is zero in any plane,
+		// Return false if it is not within the bounds
+		if ((x == 0 && (R.getP().x < bbmin || R.getP().x > bbmax)) ||
+			(y == 0 && (R.getP().y < bbmin || R.getP().y > bbmax)) ||
+			(z == 0 && (R.getP().z < bbmin || R.getP().z > bbmax)))
+		{
+			return false;
+		}
+
+		// Find tmin and max for x, compare to overall min and max
+		if (x >= 0)
+		{
+			txmin = (bbmin - R.getP().x) / x;
+			txmax = (bbmax - R.getP().x) / x;
+		}
+		else
+		{
+			txmin = (bbmax - R.getP().x) / x;
+			txmax = (bbmin - R.getP().x) / x;
+		}
+
+		// Find tmin and max for y, compare to overall min and max
+		if (y >= 0)
+		{
+			tymin = (bbmin - R.getP().y) / y;
+			tymax = (bbmax - R.getP().y) / y;
+		}
+		else
+		{
+			tymin = (bbmax - R.getP().y) / y;
+			tymax = (bbmin - R.getP().y) / y;
+		}
+
+		// Find tmin and max for z, compare to overall min and max
+		if (z >= 0)
+		{
+			tzmin = (bbmin - R.getP().z) / z;
+			tzmax = (bbmax - R.getP().z) / z;
+		}
+		else
+		{
+			tzmin = (bbmax - R.getP().z) / z;
+			tzmax = (bbmin - R.getP().z) / z;
+		}
+
+		float tmin = max(txmin, max(tymin, tzmin));
+		float tmax = min(txmax, min(tymax, tzmax));
+
+		if (tmin >tmax) return false;
+		else
+		{
+			t = tmin;
+			return true;
+		}
 	}
 
 

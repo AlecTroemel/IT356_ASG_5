@@ -253,8 +253,11 @@ glm::vec4 Scenegraph::Shade(Hitrecord & hr, stack<glm::mat4>& modelview)
 		}
 
 		glm::vec3 normalView = glm::vec3(hr.getNormal());
+		//cout << normalView.x << " " << normalView.y << " " << normalView.z << endl;
 		nDotL = glm::dot(normalView, lightVec);
-		
+
+
+
 		reflectVec = glm::reflect(-lightVec, normalView);
 		reflectVec = glm::normalize(reflectVec);
 
@@ -262,11 +265,11 @@ glm::vec4 Scenegraph::Shade(Hitrecord & hr, stack<glm::mat4>& modelview)
 		
 		ambient = glm::vec3(hr.getMaterial().getAmbient()) * lights->at(i)->getAmbient();
 		diffuse = glm::vec3(hr.getMaterial().getDiffuse()) * lights->at(i)->getDiffuse() * max(nDotL, 0.0f);	
-		if (nDotL>0)
-			specular = glm::vec3(hr.getMaterial().getSpecular()) * lights->at(i)->getSpecular() * pow(rDotV*-1, hr.getMaterial().getShininess());
+ 		if (nDotL>0)
+			specular = glm::vec3(hr.getMaterial().getSpecular()) * lights->at(i)->getSpecular() * pow(rDotV, hr.getMaterial().getShininess());
 		else
 			specular = glm::vec3(0, 0, 0);
-		
+		specular = glm::vec3(0, 0, 0);
 		fColor = fColor + glm::vec4(ambient + diffuse + specular, 1.0);
 
 		fColor.x = min(fColor.x, 1.0f);
