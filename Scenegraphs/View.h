@@ -49,7 +49,7 @@ public:
 	//the delegation functions called from the glut functions in main.cpp
 	void resize(int w, int h);
 	void initialize();
-	void draw(bool raytrace);
+	void draw(bool &raytrace);
 	void openFile(string filename);
 
 	void mousepress(int x, int y);

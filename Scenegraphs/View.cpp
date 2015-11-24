@@ -86,7 +86,7 @@ void View::initialize()
 	glUseProgram(0);
 }
 
-void View::draw(bool raytrace)
+void View::draw(bool &raytrace)
 {
 	glUseProgram(program);
 	while (!modelview.empty())
@@ -120,46 +120,40 @@ void View::draw(bool raytrace)
 
 	if (raytrace)
 	{
-		if (drawn == false)
+		cout << "Raytracing and printing to png" << endl;
+		int width = 400, height = 400;
+
+		// raytrace
+		float *temp = sgraph.Raytrace(width, height, modelview);
+
+		// write raytrace array to .png image
+		sf::Image image;
+		uint8_t *imageArray = new uint8_t[width*height * 4];
+
+		// convert the float array values to a range of 0-255
+		for (int i = 0; i < width*height*4; i++)
 		{
-			cout << "Raytracing and printing to png" << endl;
-			int width = 400, height = 400;
-
-			// raytrace
-			float *temp = sgraph.Raytrace(width, height, modelview);
-
-			// write raytrace array to .png image
-			sf::Image image;
-			uint8_t *imageArray = new uint8_t[width*height * 4];
-
-			// convert the float array values to a range of 0-255
-			for (int i = 0; i < width*height*4; i++)
-			{
-				imageArray[i] = temp[i] * 255;
-			}
-
-			image.create(width, height, imageArray);
-			// Save the image to a file
-			image.saveToFile("output/image.png");
-			cout << "image written" << endl;
-			drawn = true;
-
-			delete [] imageArray;
-			delete [] temp;
+			imageArray[i] = temp[i] * 255;
 		}
-	}
-	else
-	{
-		drawn = false; // next time we go to raytrace the image will be drawn again
-		a = glGetError();
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		sgraph.draw(modelview);
-		a = glGetError();
-		glFinish();
-		a = glGetError();
-		modelview.pop();
-	}
 
+		image.create(width, height, imageArray);
+		// Save the image to a file
+		image.saveToFile("output/image.png");
+		cout << "image written" << endl;
+		drawn = true;
+
+		delete [] imageArray;
+		delete [] temp;
+		raytrace = false;
+	}
+	//drawn = false; // next time we go to raytrace the image will be drawn again
+	a = glGetError();
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	sgraph.draw(modelview);
+	a = glGetError();
+	glFinish();
+	a = glGetError();
+	modelview.pop();
 }
 
 

@@ -198,7 +198,6 @@ public:
 				// set point of intersection (in view coord)
 				hr.setHitPoint(modelView.top() * P0);
 
-			
 				// normal of sphere is simply the x,y,z values where the ray intersects 
 				glm::mat4 normalMatrix = glm::transpose(glm::inverse(modelView.top()));
 				glm::vec4 viewCoordNormal =  normalMatrix * P0;
@@ -206,9 +205,29 @@ public:
 				viewCoordNormal = glm::normalize(viewCoordNormal);
 				hr.setNormal(viewCoordNormal);
 
-			}
+				// set texture and texture coord
+				if (!this->textures.empty())
+				{
+					hr.setTexture(&this->textures.at(0));
 
-			// later update textures
+					glm::vec4 d = P0;
+					float pi = 3.14159f;
+
+					// calc uv coords
+					float u = 0.5 + atan2(d.z, -d.x) / (2 * pi);
+					float v = 0.5 + (asin(d.y)) / pi;
+					v = min(v, 0.99f);
+
+					//cout << u << " " << v << endl;
+					glm::vec2 textCoords = glm::vec2(u, v);
+					hr.setTextureCoords(textCoords);
+				}
+				else
+				{
+					hr.setTexture(&(scenegraph->deafultTexture));
+					hr.setTextureCoords(glm::vec2(0, 0)); 		
+				}
+			}
 		}
 
 		return hit;

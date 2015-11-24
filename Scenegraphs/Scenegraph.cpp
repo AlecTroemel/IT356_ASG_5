@@ -218,7 +218,7 @@ bool Scenegraph::Raycast(Ray R, stack<glm::mat4>& modelView, glm::vec4 &color)
 	}
 	else // did not hit anything, so return background color
 	{
-		color = glm::vec4(0, 0, 0, 1);
+		color = glm::vec4(1, 1, 1, 1);
 	}
 
 	return hit;
@@ -273,6 +273,11 @@ glm::vec4 Scenegraph::Shade(Hitrecord & hr, stack<glm::mat4>& modelview)
 		fColor.y = min(fColor.y, 1.0f);
 		fColor.z = min(fColor.z, 1.0f);
 	}
+
+	// add texture color 
+	float textureR, textureG, textureB;
+	hr.getTexture()->lookup(hr.getTextureCoord().x, hr.getTextureCoord().y, textureR, textureG, textureB);
+	fColor = fColor * glm::vec4(textureR, textureG, textureB, 0);
 	return fColor;
 }
 

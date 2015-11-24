@@ -14,7 +14,7 @@ private:
 	glm::vec4 normal;
 	graphics::Material material;
 	glm::vec2 textureCoord;
-	graphics::Texture texture;
+	graphics::Texture * texture;
 public:
 	Hitrecord()
 	{
@@ -77,11 +77,11 @@ public:
 	}
 
 	//texture 
-	void setTexture(graphics::Texture t)
+	void setTexture(graphics::Texture *t)
 	{
 		this->texture = t;
 	}
-	graphics::Texture getTexture()
+	graphics::Texture* getTexture()
 	{
 		return this->texture;
 	}
