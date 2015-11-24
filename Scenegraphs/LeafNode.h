@@ -199,8 +199,57 @@ public:
 				hr.setHitPoint(modelView.top() * P0);
 
 				// set texture 
-				hr.setTexture(&(scenegraph->deafultTexture));
-				hr.setTextureCoords(glm::vec2(0, 0));
+				// Set Texture 
+				if (!this->textures.empty())
+				{
+					hr.setTexture(&this->textures.at(0));
+
+					glm::vec4 d = P0;
+
+					float u,v;
+
+					if(d.x == 1.0f)
+					{
+						u = 0.5 - d.z;
+						v = d.y + 0.5;
+					}
+					else if(d.x == -1.0f)
+					{
+						u = 0.5 + d.z;
+						v = d.y + 0.5;
+					}
+					else if(d.y == 1.0f) 
+					{
+						u = d.x+0.5;
+						v = 0.5-d.z;
+					}
+					else if(d.y == -1.0f) 
+					{
+						u = d.x+0.5;
+						v = d.z+0.5;
+					}
+					else if(d.z == 1.0f)
+					{
+						u = d.x+0.5;
+						v = d.y+0.5;
+					}
+					else
+					{
+						u = 0.5-d.x;
+						v = d.y+0.5;
+					}
+
+					v = min(v, 0.99f);
+					u = min(u, 0.99f);
+
+					glm::vec2 textCoords = glm::vec2(u, v);
+					hr.setTextureCoords(textCoords);
+				}
+				else
+				{
+					hr.setTexture(&(scenegraph->deafultTexture));
+					hr.setTextureCoords(glm::vec2(0, 0)); 		
+				}
 
 			}
 			else if (objectType == "sphere")
