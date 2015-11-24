@@ -7,7 +7,7 @@ public:
 	Intersection() {};
 	~Intersection() {};
 
-	bool Box(float &t, Ray R)
+	bool Box(float &t, Ray R, glm::vec4 &normal)
 	{
 		float tnear, tfar, txmin, txmax, tymin, tymax, tzmin, tzmax;
 		tnear = -1 * numeric_limits<float>::max();
@@ -66,10 +66,29 @@ public:
 		float tmin = max(txmin, max(tymin, tzmin));
 		float tmax = min(txmax, min(tymax, tzmax));
 
-		if (tmin >tmax) return false;
+		if (tmin > tmax) return false;
 		else
 		{
 			t = tmin;
+			glm::vec4 P0 = R.getP() + t * R.getV();
+
+			// compute normal 
+			if (txmin > tymin && txmin > tzmin)
+			{
+				if (P0.x > 0.0f) normal = glm::vec4(1, 0, 0, 0);
+				else normal = glm::vec4(1, 0, 0, 0);
+			}
+			if (tymin > txmin && tymin > tzmin)
+			{
+				if (P0.y > 0.0f) normal = glm::vec4(0, 1, 0, 0);
+				else normal = glm::vec4(0, -1, 0, 0);
+			}
+			if (tzmin > txmin && tzmin > tymin)
+			{
+				if (P0.z > 0.0f) normal = glm::vec4(0, 0, 1, 0);
+				else normal = glm::vec4(0, 0, -1, 0);
+			}
+
 			return true;
 		}
 	}

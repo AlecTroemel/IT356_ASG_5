@@ -167,14 +167,14 @@ public:
 		//cout << objectType << endl;
 		float newT = 0;
 		bool hit = false;
-		glm::vec3 normal;
+		glm::vec4 normal;
 
 		// convert Ray object coordinates 
 		Ray rayObjectView;
 		rayObjectView.setP(glm::inverse(modelView.top()) * R.getP());
 		rayObjectView.setV(glm::inverse(modelView.top()) * R.getV());
 
-		if (objectType == "box") hit = intersection.Box(newT, rayObjectView);
+		if (objectType == "box") hit = intersection.Box(newT, rayObjectView, normal);
 		else if (objectType == "sphere") hit = intersection.Sphere(newT, rayObjectView);
 
 	
@@ -193,42 +193,10 @@ public:
 			if (objectType == "box")
 			{
 				glm::mat4 normalMatrix = glm::transpose(glm::inverse(modelView.top()));
-				glm::vec4 objNormal = glm::vec4(0,0,0,0);
-
-				// get x part of normal
-				if (P0.x == 0.5f) objNormal.x = 1.0f;
-				else objNormal.x = -1.0f;
-				
-				// get x part of normal
-				if (P0.y == 0.5f) objNormal.y = 1.0f;
-				else objNormal.y = -1.0f;
-
-				// get x part of normal
-				if (P0.z == 0.5f) objNormal.z = 1.0f;
-				else objNormal.z = -1.0f;
-
-				/*
-				if (P0.x == 0.5f)
-					objNormal = glm::vec4(1.0f, 0, 0, 0);
-				else if (P0.x == -0.5f)
-					objNormal = glm::vec4(-1.0f, 0, 0, 0);
-				else if (P0.y == 0.5f)
-					objNormal = glm::vec4(0, 1.0f, 0, 0);
-				else if (P0.y == -0.5f)
-					objNormal = glm::vec4(0, -1.0f, 0, 0);
-				else if (P0.z == 0.5f)
-					objNormal = glm::vec4(0, 0, 1.0f, 0);
-				else if (P0.z == -0.5f)
-					objNormal = glm::vec4(0, 0, -1.0f, 0);
-				else
-					cout << P0.x << " " << P0.y << " " << P0.z << endl;
-					*/
-
-				//cout << objNormal.x << " " << objNormal.y << " " << objNormal.z << endl;
-
-				glm::vec4 viewCoordNormal = normalMatrix * objNormal;
-				viewCoordNormal = glm::normalize(viewCoordNormal);
+				glm::vec4 viewCoordNormal = normalMatrix *  glm::normalize(normal);
+				//viewCoordNormal = glm::normalize(viewCoordNormal);
 				hr.setNormal(viewCoordNormal);
+				hr.setHitPoint(modelView.top() * P0);
 
 				// set texture 
 				hr.setTexture(&(scenegraph->deafultTexture));
