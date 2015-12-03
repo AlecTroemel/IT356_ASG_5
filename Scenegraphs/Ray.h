@@ -12,12 +12,12 @@ private:
 public:
 	glm::vec4 getV()
 	{
-		return this->start;
+		return this->dir;
 	}
 
 	glm::vec4 getP()
 	{
-		return this->dir;
+		return this->start;
 	}
 
 	void setP(glm::vec4 p)
@@ -38,7 +38,7 @@ public:
 
 	Ray(int x, int y, int z)
 	{
-		this->start = glm::vec4(0, 0, 10, 1);
+		this->start = glm::vec4(0, 0, 0, 1);
 		this->dir = glm::vec4(x, y, z, 0);
 	}
 

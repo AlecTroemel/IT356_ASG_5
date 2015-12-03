@@ -102,7 +102,7 @@ void View::draw(bool &raytrace)
 	modelview.push(glm::mat4(1.0));
 
 	modelview.top() = glm::mat4(1.0f)
-		* glm::lookAt(glm::vec3(0, 0, 10), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0))
+		* glm::lookAt(glm::vec3(0, 0, 15), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0))
 		* trackballTransform;
 
 	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, glm::value_ptr(proj.top()));
@@ -121,7 +121,7 @@ void View::draw(bool &raytrace)
 	if (raytrace)
 	{
 		cout << "Raytracing and printing to png" << endl;
-		int width = 400, height = 400;
+		int width = 300, height = 300;
 
 		// raytrace
 		float *temp = sgraph.Raytrace(width, height, modelview);

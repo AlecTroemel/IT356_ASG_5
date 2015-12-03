@@ -2,45 +2,98 @@
 	<instance name="box" path="models/box" />
     <instance name="sphere" path="models/sphere" />
     <image name="checkerboard" path="textures/checkerboard.png" /> 
+    <image name="white" path="textures/white.png" />
     <light>
         <ambient>0.7 0.7 0.7</ambient>
         <diffuse>0.7 0.7 0.7</diffuse>
         <specular>0.7 0.7 0.7</specular>
-        <position>0 2 2</position>
+        <position>1 10 0</position>
     </light>
+
     <group>
-        <transform>
+    
+       <transform>
             <set>
-                <translate> -2 0 0 </translate>
-                <scale> 1 1 1 </scale>
+                <translate> 0 1 0 </translate>
+                <scale> 4 4 4 </scale>
             </set>
                     
-            <object instanceof="sphere" >
+            <object instanceof="sphere" texture="white" >
+                <material>                       
+                    <ambient>.8 .1 .8</ambient>
+                    <diffuse>.8 .1 .8</diffuse>
+                    <specular>0.8 0.1 0.8</specular>
+                    <shininess>8</shininess>
+                    <absorption>0.5</absorption>
+                    <reflection>0.5</reflection>
+                    <transparency>.0</transparency>
+                </material>
+            </object>
+        </transform>
+        <transform>
+            <set>
+                <translate> 2 1 -4 </translate>
+                <scale> 2 2 2 </scale>
+            </set>
+                    
+            <light>
+                <ambient>0.7 0.7 0.2</ambient>
+                <diffuse>0.7 0.7 0.2</diffuse>
+                <specular>0.7 0.7 0.2</specular>
+                <position>3 0 0</position>
+            </light>    
+
+            <object instanceof="sphere" texture="checkerboard" >
+                <material>                       
+                    <ambient>.3 .3 .8</ambient>
+                    <diffuse>.3 .3 .8</diffuse>
+                    <specular>0.3 0.3 0.8</specular>
+                    <shininess>8</shininess>
+                    <absorption>1</absorption>
+                    <reflection>0</reflection>
+                    <transparency>0</transparency>
+                </material>
+            </object>
+        </transform>
+    
+        
+        <transform>
+            <set>
+                <translate> 0 -.5 0 </translate>
+                <scale> 20 40 20 </scale>
+            </set>
+                    
+            <object instanceof="box" texture="checkerboard" >
                 <material>                       
                     <ambient>.8 .2 .2</ambient>
                     <diffuse>.8 .2 .2</diffuse>
                     <specular>0.8 0.2 0.2</specular>
                     <shininess>8</shininess>
+                    <absorption>0.9</absorption>
+                    <reflection>0.1</reflection>
+                    <transparency>.0</transparency>
                 </material>
             </object>
         </transform>
-
+        
         <transform>
             <set>
-                <translate> 2 0 0 </translate>
-                <scale> 2 1 1 </scale>
-                <rotate>53 0 -1 1</rotate>
+                <translate> 4 4 2.5 </translate>
+                <scale> 2 1 2 </scale>
             </set>
                     
-            <object instanceof="sphere" >
+            <object instanceof="box" texture="checkerboard" >
                 <material>                       
-                    <ambient>.2 .2 .8</ambient>
-                    <diffuse>.2 .2 .8</diffuse>
-                    <specular>0.2 0.2 0.8</specular>
+                    <ambient>.2 .8 .2</ambient>
+                    <diffuse>.2 .8 .2</diffuse>
+                    <specular>0.2 0.8 0.2</specular>
                     <shininess>8</shininess>
+                    <absorption>1</absorption>
+                    <reflection>0</reflection>
+                    <transparency>.0</transparency>
                 </material>
             </object>
-        </transform>wsz
+        </transform>
 
     </group>
 </scene>

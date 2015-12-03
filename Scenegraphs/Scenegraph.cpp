@@ -110,7 +110,7 @@ void Scenegraph::initShaderProgram(GLint shaderProgram)
    }
 
 
-   // set up the default white texture
+    // set up the default white texture
 	string defaultTextureName = "textures/white.png";
 	deafultTexture.createImage(defaultTextureName);
 }
@@ -142,8 +142,6 @@ void Scenegraph::draw(stack<glm::mat4>& modelView)
         root->draw(modelView);
     }
 }
-
-
 
 
 void Scenegraph::animate(float time)
@@ -185,10 +183,11 @@ float* Scenegraph::Raytrace(const int width, const int height, stack<glm::mat4>&
 		for (int x = 0; x < width; x++)
 		{
 			// create Ray from camera through point (x,y)
-			Ray R(x - (0.5 * width), y - (0.5 * height), -(0.5 * height) / tan(100.0f*3.14159f / 90));
+			Ray R(x - (0.5 * width), y - (0.5 * height), (-0.5 * height) / tan(50.0f*3.14159f / 180));
 
 			glm::vec4 color;
-			Raycast(R, modelView, color);
+			float t;
+			Raycast(R, modelView, color,true, t, 0);
 
 			pixels[counter] = color.x;
 			counter++;
@@ -200,12 +199,12 @@ float* Scenegraph::Raytrace(const int width, const int height, stack<glm::mat4>&
 			counter++;
 		}
 	}
-
+	
 	// return  the image as a 1d array of vec3
 	return pixels;
 }
 
-bool Scenegraph::Raycast(Ray R, stack<glm::mat4>& modelView, glm::vec4 &color)
+bool Scenegraph::Raycast(Ray R, stack<glm::mat4>& modelView, glm::vec4 &color, bool wantColor, float &t, int recCount)
 {
 	Hitrecord hr;
 
@@ -213,26 +212,30 @@ bool Scenegraph::Raycast(Ray R, stack<glm::mat4>& modelView, glm::vec4 &color)
 
 	if (hit == true) 
 	{
-		//color = glm::vec4(1, 1, 1, 1);
-		color = Shade(hr, modelView);
+		if (wantColor) color = Shade(hr, modelView, R, recCount);
 	}
 	else // did not hit anything, so return background color
 	{
-		color = glm::vec4(1, 1, 1, 1);
+		color = glm::vec4(0.6, 0.95, 0.95, 1);
 	}
+
+	t = hr.getT();
 
 	return hit;
 }
 
-glm::vec4 Scenegraph::Shade(Hitrecord & hr, stack<glm::mat4>& modelview)
+glm::vec4 Scenegraph::Shade(Hitrecord & hr, stack<glm::mat4>& modelview, Ray R, int recCount)
 {
 	glm::vec3 lightVec, viewVec, reflectVec;
 	glm::vec3 normalView;
  	glm::vec3 ambient, diffuse, specular;
  	float nDotL, rDotV;
 
-	glm::vec4 fColor = glm::vec4(0, 0, 0, 1);;
-
+	glm::vec4 fColor = glm::vec4(0, 0, 0, 1);
+	glm::vec4 Ca = glm::vec4(0, 0, 0, 1);
+	glm::vec4 Cr = glm::vec4(0, 0, 0, 1);
+	glm::vec4 Ct = glm::vec4(0, 0, 0, 1);
+	float shadow = 1.0f;
 	const int MAXLIGHTS = 10;
 
 	vector<graphics::Light*> * lights = lightsToViewCoord(modelview);
@@ -241,6 +244,22 @@ glm::vec4 Scenegraph::Shade(Hitrecord & hr, stack<glm::mat4>& modelview)
 	viewVec = -glm::vec3(hr.getHitPoint());
 	viewVec = glm::normalize(viewVec);
 
+
+	// shadows	
+	for (int i = 0; i < numLights; i++)
+	{
+		// set up shadow ray
+		Ray shadowRay;
+		shadowRay.setV(lights->at(i)->getPosition() - hr.getHitPoint());
+		shadowRay.setP(hr.getHitPoint() + (0.001f * shadowRay.getP()));
+		glm::vec4 tempColor;
+		float t;
+		// cast shadow ray
+		bool obscured = Raycast(shadowRay, modelview, tempColor, false, t, recCount);
+
+		if (obscured && t <= 1 && t >= 0) shadow = 0.5f * shadow;
+	} 
+	
 	for (int i = 0; i<numLights; i++)
 	{	
 		if (lights->at(i)->getPosition().w != 0)
@@ -253,36 +272,59 @@ glm::vec4 Scenegraph::Shade(Hitrecord & hr, stack<glm::mat4>& modelview)
 		}
 
 		glm::vec3 normalView = glm::vec3(hr.getNormal());
-		//cout << normalView.x << " " << normalView.y << " " << normalView.z << endl;
+
+
 		nDotL = glm::dot(normalView, lightVec);
-
-
 
 		reflectVec = glm::reflect(-lightVec, normalView);
 		reflectVec = glm::normalize(reflectVec);
 
 		rDotV = max(glm::dot(reflectVec, viewVec), 0.0f);
-		
 
 		ambient = glm::vec3(hr.getMaterial().getAmbient()) * lights->at(i)->getAmbient();
 		diffuse = glm::vec3(hr.getMaterial().getDiffuse()) * lights->at(i)->getDiffuse() * max(nDotL, 0.0f);
-
- 		if (nDotL>0)
+		if (nDotL > 0)
 			specular = glm::vec3(hr.getMaterial().getSpecular()) * lights->at(i)->getSpecular() * pow(rDotV, hr.getMaterial().getShininess());
 		else
 			specular = glm::vec3(0, 0, 0);
-		//specular = glm::vec3(0, 0, 0);
-		fColor = fColor + glm::vec4(ambient + diffuse + specular, 1.0);
 
-		fColor.x = min(fColor.x, 1.0f);
-		fColor.y = min(fColor.y, 1.0f);
-		fColor.z = min(fColor.z, 1.0f);
+		Ca = Ca + glm::vec4(ambient + diffuse + specular, 0);
 	}
-
+	
 	// add texture color 
 	float textureR, textureG, textureB;
 	hr.getTexture()->lookup(hr.getTextureCoord().x, hr.getTextureCoord().y, textureR, textureG, textureB);
-	fColor = fColor * glm::vec4(textureR, textureG, textureB, 0);
+	Ca = Ca * glm::vec4(textureR, textureG, textureB, 0) * shadow;
+
+	//reflection
+	if (hr.getMaterial().getReflection() > 0.01f && recCount < 4)
+	{
+		glm::vec4 reflecVec = glm::reflect(glm::normalize(R.getV()), glm::normalize(hr.getNormal()));
+		reflecVec.z = -1.0f * reflecVec.z;
+		reflecVec.w = 0;
+
+		Ray reflectRay;
+		reflectRay.setV(reflecVec);
+		reflectRay.setP(hr.getHitPoint() + (0.01f * reflecVec));
+
+		float t;
+		int c = recCount + 1;
+		glm::vec4 tempColor;
+		bool hit = Raycast(reflectRay, modelview, tempColor, true, t, c);
+		Cr = Cr + tempColor;
+	}
+
+	Cr.x = min(Cr.x, 1.0f);
+	Cr.y = min(Cr.y, 1.0f);
+	Cr.z = min(Cr.z, 1.0f);
+
+	// add everything up
+	fColor = (hr.getMaterial().getAbsorption() * Ca) + (hr.getMaterial().getReflection() * Cr); //+ (hr.getMaterial().getTransparency() * Ct);
+	
+	fColor.x = min(fColor.x, 1.0f);
+	fColor.y = min(fColor.y, 1.0f);
+	fColor.z = min(fColor.z, 1.0f);
+	
 	return fColor;
 }
 

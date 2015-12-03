@@ -177,9 +177,8 @@ public:
 		if (objectType == "box") hit = intersection.Box(newT, rayObjectView, normal);
 		else if (objectType == "sphere") hit = intersection.Sphere(newT, rayObjectView);
 
-	
 		// if the new T is closer, update the hitrecord 
-		if (newT < hr.getT() && hit == true)
+		if (newT > 0.0f && newT < hr.getT() && hit == true)
 		{
 			hr.setT(newT);
 			hr.setMaterial(this->material);
@@ -193,8 +192,11 @@ public:
 			if (objectType == "box")
 			{
 				glm::mat4 normalMatrix = glm::transpose(glm::inverse(modelView.top()));
-				glm::vec4 viewCoordNormal = normalMatrix *  glm::normalize(normal);
+				//glm::vec4 viewCoordNormal = normalMatrix *  glm::normalize(normal);
 				//viewCoordNormal = glm::normalize(viewCoordNormal);
+				
+				glm::vec4 viewCoordNormal = normalMatrix *  glm::normalize(normal);
+				viewCoordNormal = glm::normalize(viewCoordNormal);
 				hr.setNormal(viewCoordNormal);
 				hr.setHitPoint(modelView.top() * P0);
 
@@ -208,27 +210,27 @@ public:
 
 					float u,v;
 
-					if(d.x == 1.0f)
+					if(normal.x == 1.0f)
 					{
 						u = 0.5 - d.z;
 						v = d.y + 0.5;
 					}
-					else if(d.x == -1.0f)
+					else if (normal.x == -1.0f)
 					{
 						u = 0.5 + d.z;
 						v = d.y + 0.5;
 					}
-					else if(d.y == 1.0f) 
+					else if (normal.y == 1.0f)
 					{
 						u = d.x+0.5;
 						v = 0.5-d.z;
 					}
-					else if(d.y == -1.0f) 
+					else if (normal.y == -1.0f)
 					{
 						u = d.x+0.5;
 						v = d.z+0.5;
 					}
-					else if(d.z == 1.0f)
+					else if (normal.z == 1.0f)
 					{
 						u = d.x+0.5;
 						v = d.y+0.5;
@@ -259,8 +261,15 @@ public:
 
 				// normal of sphere is simply the x,y,z values where the ray intersects 
 				glm::mat4 normalMatrix = glm::transpose(glm::inverse(modelView.top()));
+				//glm::vec4 viewCoordNormal = P0;
+				//viewCoordNormal.w = 0; // its now a vector 
+				//viewCoordNormal = normalMatrix * viewCoordNormal;
+
+				// old way 
 				glm::vec4 viewCoordNormal =  normalMatrix * P0;
 				viewCoordNormal.w = 0; // its now a vector 
+
+
 				viewCoordNormal = glm::normalize(viewCoordNormal);
 				hr.setNormal(viewCoordNormal);
 
@@ -287,9 +296,10 @@ public:
 					hr.setTextureCoords(glm::vec2(0, 0)); 		
 				}
 			}
+			return true;
 		}
 
-		return hit;
+		return false;
 	}
 
 protected:

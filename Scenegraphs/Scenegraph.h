@@ -68,8 +68,8 @@ public:
 private:
 
 	/***************************** Raytracing Stuff *****************************/
-	bool Raycast(Ray R, stack<glm::mat4>& modelView, glm::vec4 &color);
-	glm::vec4 Shade(Hitrecord & hr, stack<glm::mat4>& modelView);
+	bool Raycast(Ray R, stack<glm::mat4>& modelView, glm::vec4 &color, bool ifColor, float &t, int recCount);
+	glm::vec4 Shade(Hitrecord & hr, stack<glm::mat4>& modelView,Ray R,int recCount);
 
 	/***************************** SceneGraph Stuff *****************************/
     Node *root;
@@ -95,6 +95,7 @@ private:
 
 	LightLocation lightLocation[10];
 	bool debug = true;
+	bool switcher = true;
 };
 
 #endif // SCENEGRAPH_H
